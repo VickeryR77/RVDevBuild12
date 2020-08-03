@@ -71,11 +71,11 @@ namespace Roshambo
 
     class Human : Player
     {
-        //Takes input and assigns a value.
+        //Calls GenerateRoshambo upon initialization in main.
         public Human()
         {
             Name = "Player1";
-            RoshamboValue = GenerateRoshambo();
+            RoshamboValue = 0;
         }
         public override Outcomes GenerateRoshambo() 
         {
@@ -85,7 +85,7 @@ namespace Roshambo
             Console.WriteLine("3. Scissors");
 
             bool isValid = int.TryParse(Console.ReadLine(), out int next);
-            while (!isValid) { Console.WriteLine("Please enter a valid choice. (1-3)"); isValid = int.TryParse(Console.ReadLine(), out next); }
+            while (!isValid || next < 1 || next > 3) { Console.WriteLine("Please enter a valid choice. (1-3)"); isValid = int.TryParse(Console.ReadLine(), out next); }
             return RoshamboValue = (Outcomes) next-1;
         }
         public override string ToString()
@@ -106,41 +106,84 @@ namespace Roshambo
             bool running = true;
             while (running)
             {
+                Console.Clear();
                 Console.WriteLine("Welcome to ROSHAMBO!");
                 Console.WriteLine("Select your opponent:");
                 Console.WriteLine("1. School of Hard Rocks");
                 Console.WriteLine("2. Lucky Justice");
+                Console.WriteLine("0. to quit.");
 
                 bool isValid = int.TryParse(Console.ReadLine(), out int answer);
-                while (!isValid || answer < 1 || answer > 2)
+                while (!isValid || answer < 0 || answer > 2)
                 {
                     Console.WriteLine("That is not a valid opponent. (Type 1 or 2)");
                     isValid = int.TryParse(Console.ReadLine(), out answer);
                 }
 
+                bool isRunning = true;
                 if(answer == 1)
                 {
-                    Console.Clear();
-                    PlayerRock player = new PlayerRock();
-                    Console.WriteLine($"You are facing {player.Name}");
-                    Console.WriteLine("");
-                    Human player1 = new Human();
-                    Console.Clear();
-                    Console.WriteLine($"You played {player1.RoshamboValue}");
-                    Console.WriteLine($"They played {player.GenerateRoshambo()}");
-                    GetWinner(player.RoshamboValue,player1.RoshamboValue);
+                    while (isRunning)
+                    {
+                        Console.Clear();
+                        PlayerRock cpu = new PlayerRock();
+                        Console.WriteLine($"You are facing {cpu.Name}");
+                        Console.WriteLine("");
+                        Human player1 = new Human();
+                        player1.GenerateRoshambo();
+                        Console.Clear();
+                        Console.WriteLine($"You played {player1.RoshamboValue}");
+                        Console.WriteLine($"They played {cpu.GenerateRoshambo()}");
+                        GetWinner(cpu.RoshamboValue, player1.RoshamboValue);
+                        PlayAgain(out isRunning);
+                    }
                 }
                 if(answer == 2)
                 {
-                    Console.Clear();
-                    PlayerCPU player = new PlayerCPU();
-                    Console.WriteLine($"You are facing {player.Name}!");
-                    Console.WriteLine("");
-                    Human player1 = new Human();
-                    Console.Clear();
-                    Console.WriteLine($"You played {player1.RoshamboValue}");
-                    Console.WriteLine($"They played {player.GenerateRoshambo()}");
-                    GetWinner(player.RoshamboValue, player1.RoshamboValue);
+                    while (isRunning)
+                    {
+                        Console.Clear();
+                        PlayerCPU cpu = new PlayerCPU();
+                        Console.WriteLine($"You are facing {cpu.Name}!");
+                        Console.WriteLine("");
+                        Human player1 = new Human();
+                        player1.GenerateRoshambo();
+                        Console.Clear();
+                        Console.WriteLine($"You played {player1.RoshamboValue}");
+                        Console.WriteLine($"They played {cpu.GenerateRoshambo()}");
+                        GetWinner(cpu.RoshamboValue, player1.RoshamboValue);
+                        PlayAgain(out isRunning);
+                    }
+                }
+                if(answer == 0)
+                {
+                    Environment.Exit(1);
+                }
+            }
+        }
+
+        public static void PlayAgain(out bool proceed)
+        {
+            proceed = true;
+            bool running = true;
+            while (running)
+            {
+                Console.WriteLine("Want to play this team again? (Y/N)");
+                string entry = Console.ReadLine().ToLower();
+                if (entry == "y")
+                {
+                    proceed = true;
+                    break;
+                }
+                else if (entry == "n")
+                {
+                    proceed = false;
+                    break;
+                }
+                else
+                {
+                    proceed = true;
+                    continue;
                 }
             }
         }
@@ -150,65 +193,47 @@ namespace Roshambo
             if (Player == 0 && CPU == 0)
             {
                 Console.WriteLine("You tied!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == 0 && CPU == (Outcomes)1)
             {
                 Console.WriteLine("You lost!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == 0 && CPU == (Outcomes)2)
             {
                 Console.WriteLine("You won!!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == (Outcomes)1 && CPU == 0) //
             {
                 Console.WriteLine("You won!!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == (Outcomes)1 && CPU == (Outcomes)1)
             {
                 Console.WriteLine("You tied!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == (Outcomes)1 && CPU == (Outcomes)2)
             {
                 Console.WriteLine("You lost!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == (Outcomes)2 && CPU == 0) //
             {
                 Console.WriteLine("You lost!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == (Outcomes)2 && CPU == (Outcomes)1)
             {
                 Console.WriteLine("You won!!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
             if (Player == (Outcomes)2 && CPU == (Outcomes)2)
             {
                 Console.WriteLine("You tied!");
-                Console.WriteLine("Press enter to play again.");
-                Console.ReadLine();
-                Console.Clear();
+                Console.WriteLine("");
             }
         }
     }
